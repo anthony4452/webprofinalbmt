@@ -39,6 +39,9 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+
+            // Aquí asignamos el rol directamente sin pedirlo en formulario
+            'role' => 'user',
         ]);
 
         event(new Registered($user));
@@ -47,4 +50,5 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
+
 }

@@ -14,7 +14,7 @@
 
         <hr class="my-4">
 
-        <a href="{{ route('zonasseguras.index') }}" class="btn btn-primary">
+        <a href="{{ route('zonasegs.index') }}" class="btn btn-primary">
             Gestionar Zonas Seguras
         </a>
 

@@ -11,7 +11,7 @@
         @endif
 
         <div class="flex justify-end mb-4">
-            <a href="{{ route('zonasseguras.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+            <a href="{{ route('zonasegs.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
                 + Nueva Zona Segura
             </a>
         </div>
@@ -21,20 +21,23 @@
                 <thead class="bg-black text-white">
                     <tr>
                         <th class="px-4 py-2 text-left">Nombre</th>
+                        <th class="px-4 py-2 text-left">Tipo</th>
                         <th class="px-4 py-2 text-left">Radio (m)</th>
-                        <th class="px-4 py-2 text-left">Tipo de Seguridad</th>
-                        <th class="px-4 py-2 text-left">Ubicación (Lat, Long)</th>
+                        <th class="px-4 py-2 text-left">Ubicación</th>
                         <th class="px-4 py-2 text-left">Estado</th>
                         <th class="px-4 py-2 text-left">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($zonasSeguras as $zona)
+                    @forelse($zonasegs as $zona)
                         <tr class="border-b hover:bg-gray-100">
                             <td class="px-4 py-2">{{ $zona->nombre }}</td>
-                            <td class="px-4 py-2">{{ $zona->radio }}</td>
                             <td class="px-4 py-2">{{ $zona->tipo_seguridad }}</td>
-                            <td class="px-4 py-2">{{ $zona->latitud }}, {{ $zona->longitud }}</td>
+                            <td class="px-4 py-2">{{ $zona->radio }}</td>
+                            <td class="px-4 py-2">
+                                Lat: {{ $zona->latitud }}<br>
+                                Long: {{ $zona->longitud }}
+                            </td>
                             <td class="px-4 py-2">
                                 @if($zona->activo)
                                     <span class="px-2 py-1 bg-green-200 text-green-800 rounded-full text-sm">Activo</span>
@@ -43,16 +46,16 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2">
-                                <a href="{{ route('zonasseguras.edit', $zona->id) }}"
+                                <a href="{{ route('zonasegs.edit', $zona->id) }}"
                                    class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 shadow">
                                     Editar
                                 </a>
 
-                                <form action="{{ route('zonasseguras.destroy', $zona->id) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Eliminar esta zona segura?')">
+                                <form action="{{ route('zonasegs.destroy', $zona->id) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Eliminar esta zona segura?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded shadow">
+                                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded shadow">
                                         Eliminar
                                     </button>
                                 </form>

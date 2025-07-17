@@ -2,101 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ZonaRiesgo;
+use Illuminate\Http\Request;
+
 class ZonaRiesgoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $zonas = ZonaRiesgo::all();
         return view('zonasriesgo.index', compact('zonas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('zonasriesgo.nuevo');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'nivel_riesgo' => 'required|in:bajo,medio,alto',
             'coordenadas' => 'required|string',
         ]);
 
-        $datos = [
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'nivel_riesgo' => $request->nivel_riesgo,
-            'coordenadas' => $request->coordenadas,
-        ];
+        $validatedData['activo'] = $request->has('activo');
 
-        ZonaRiesgo::create($datos);
+        ZonaRiesgo::create($validatedData);
 
-        return redirect()->route('zonasriesgo.index')->with('message', 'Zona de riesgo creada exitosamente.');
+        return redirect()->route('zonasriesgo.index')->with('success', 'Zona de riesgo creada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(ZonaRiesgo $zonasriesgo)
     {
-        
+        return view('zonasriesgo.editar', ['zonaRiesgo' => $zonasriesgo]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $zonasriesgo = ZonaRiesgo::findOrFail($id);
-        return view('zonasriesgo.editar', compact('zonasriesgo'));
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+
+
+    public function update(Request $request, ZonaRiesgo $zonasriesgo)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'nivel_riesgo' => 'required|in:bajo,medio,alto',
             'coordenadas' => 'required|string',
         ]);
 
-        $zonasriesgo = ZonaRiesgo::findOrFail($id);
+        $validatedData['activo'] = $request->has('activo');
 
-        $datos = [
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'nivel_riesgo' => $request->nivel_riesgo,
-            'coordenadas' => $request->coordenadas,
-        ];
+        $zonasriesgo->update($validatedData);
 
-        $zonasriesgo->update($datos);
-
-        return redirect()->route('zonasriesgo.index')->with('message', 'Zona de riesgo actualizada correctamente.');
+        return redirect()->route('zonasriesgo.index')->with('success', 'Zona de riesgo actualizada correctamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(ZonaRiesgo $zonasriesgo)
     {
-        $zonasriesgo = ZonaRiesgo::findOrFail($id);
         $zonasriesgo->delete();
-        return redirect()->route('zonasriesgo.index')->with('message', 'Zona de riesgo eliminada.');
+        return redirect()->route('zonasriesgo.index')->with('success', 'Zona eliminada correctamente');
     }
 }

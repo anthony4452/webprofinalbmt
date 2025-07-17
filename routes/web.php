@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZonaRiesgoController;
 use App\Http\Controllers\PuntosController;
+use App\Http\Controllers\MapaController;
 
 // Registrar middleware alias directamente para que Laravel los reconozca
 Route::aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
@@ -34,6 +35,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     
     Route::resource('zonasriesgo', ZonaRiesgoController::class);
     Route::resource('puntos', PuntosController::class);
+    Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
+
 });
 
 // Rutas para usuarios comunes con middleware user

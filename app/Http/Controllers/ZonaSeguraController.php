@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\ZonaSegura;
+use App\Models\ZonasSeguras;
 use Illuminate\Http\Request;
 
 class ZonaSeguraController extends Controller
 {
     public function index()
     {
-        $zonasSeguras = ZonaSegura::all();
+        $zonasSeguras = ZonasSeguras::all();
         return view('zonasseguras.index', compact('zonasSeguras'));
     }
 
@@ -27,17 +27,17 @@ class ZonaSeguraController extends Controller
             'tipo_seguridad' => 'required|string|max:255',
         ]);
 
-        ZonaSegura::create($request->all());
+        ZonasSeguras::create($request->all());
 
         return redirect()->route('zonasseguras.index')->with('success', 'Zona segura creada correctamente');
     }
 
-    public function edit(ZonaSegura $zonasegura)
+    public function edit(ZonasSeguras $zonasegura)
     {
         return view('zonasseguras.edit', compact('zonasegura'));
     }
 
-    public function update(Request $request, ZonaSegura $zonasegura)
+    public function update(Request $request, ZonasSeguras $zonasegura)
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
@@ -52,7 +52,7 @@ class ZonaSeguraController extends Controller
         return redirect()->route('zonasseguras.index')->with('success', 'Zona segura actualizada correctamente');
     }
 
-    public function destroy(ZonaSegura $zonasegura)
+    public function destroy(ZonasSeguras $zonasegura)
     {
         $zonasegura->delete();
 

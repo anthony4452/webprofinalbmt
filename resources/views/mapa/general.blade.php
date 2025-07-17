@@ -5,32 +5,30 @@
 
     <div class="max-w-7xl mx-auto p-6">
         <div class="mb-4 flex flex-wrap gap-4">
-            <select id="filtroTipo" class="form-select">
+            <!-- Filtro principal -->
+            <select id="filtroTipo" class="form-select" onchange="mostrarFiltroEspecifico()">
                 <option value="todos">Todas las categorías</option>
                 <option value="riesgo">Zonas de Riesgo</option>
                 <option value="segura">Zonas Seguras</option>
                 <option value="punto">Puntos de Encuentro</option>
             </select>
 
-            <select id="filtroRiesgo" class="form-select">
+            <!-- Filtro nivel de riesgo (solo para Zonas de Riesgo) -->
+            <select id="filtroRiesgo" class="form-select" style="display:none;">
                 <option value="todos">Todos los niveles</option>
                 <option value="bajo">Bajo</option>
                 <option value="medio">Medio</option>
                 <option value="alto">Alto</option>
             </select>
 
-            <select id="filtroTipoSeguridad" class="form-select">
-                <option value="todos">Todos los tipos de seguridad</option>
-                <option value="Vigilancia">Vigilancia</option>
-                <option value="Barreras">Barreras</option>
-                <option value="Alarmas">Alarmas</option>
+            <!-- Filtro tipo seguridad (solo para Zonas Seguras) -->
+            <select id="filtroTipoSeguridad" class="form-select" style="display:none;">
+                <option value="todos">Todos los tipos</option>
+                <option value="tipo1">Alarma</option>
+                <option value="tipo2">Vigilancia</option>
+                <option value="tipo3">Barreras</option>
             </select>
 
-            <select id="filtroEstado" class="form-select">
-                <option value="todos">Todos los estados</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
 
             <button onclick="filtrarMapa()" class="bg-blue-600 text-white px-4 py-2 rounded">Filtrar</button>
         </div>
@@ -51,38 +49,53 @@
                 zoom: 14,
             });
 
+            mostrarFiltroEspecifico();
             mostrarTodo();
+        }
+
+        function mostrarFiltroEspecifico() {
+            const tipo = document.getElementById('filtroTipo').value;
+
+            document.getElementById('filtroRiesgo').style.display = 'none';
+            document.getElementById('filtroTipoSeguridad').style.display = 'none';
+
+            if (tipo === 'riesgo') {
+                document.getElementById('filtroRiesgo').style.display = 'inline-block';
+            } else if (tipo === 'segura') {
+                document.getElementById('filtroTipoSeguridad').style.display = 'inline-block';
+            } 
+        }
+
+        function limpiarCapas() {
+            capas.forEach(c => c.setMap(null));
+            capas = [];
         }
 
         function mostrarTodo() {
             limpiarCapas();
 
             zonasRiesgo.forEach(z => {
-                if (z.activo) {
-                    const coords = JSON.parse(z.coordenadas);
-                    const poligono = new google.maps.Polygon({
-                        paths: coords,
-                        strokeColor: "#FF0000",
-                        fillColor: "#FF9999",
-                        fillOpacity: 0.5,
-                        map: mapa
-                    });
-                    capas.push(poligono);
-                }
+                const coords = JSON.parse(z.coordenadas);
+                const poligono = new google.maps.Polygon({
+                    paths: coords,
+                    strokeColor: "#FF0000",
+                    fillColor: "#FF9999",
+                    fillOpacity: 0.5,
+                    map: mapa
+                });
+                capas.push(poligono);
             });
 
             zonasSeguras.forEach(z => {
-                if (z.activo) {
-                    const circ = new google.maps.Circle({
-                        center: { lat: parseFloat(z.latitud), lng: parseFloat(z.longitud) },
-                        radius: parseFloat(z.radio),
-                        strokeColor: "#00FF00",
-                        fillColor: "#AAFFAA",
-                        fillOpacity: 0.5,
-                        map: mapa
-                    });
-                    capas.push(circ);
-                }
+                const circ = new google.maps.Circle({
+                    center: { lat: parseFloat(z.latitud), lng: parseFloat(z.longitud) },
+                    radius: parseFloat(z.radio),
+                    strokeColor: "#00FF00",
+                    fillColor: "#AAFFAA",
+                    fillOpacity: 0.5,
+                    map: mapa
+                });
+                capas.push(circ);
             });
 
             puntosEncuentro.forEach(p => {
@@ -91,34 +104,29 @@
                     map: mapa,
                     title: p.nombre,
                     icon: {
-                        url: '/img/encuentro.png', // Cambia aquí la ruta al icono que quieres usar
-                        scaledSize: new google.maps.Size(32, 32) // tamaño del icono en pixeles (ajústalo)
+                        url: '/img/encuentro.png',
+                        scaledSize: new google.maps.Size(32, 32)
                     }
                 });
                 capas.push(marcador);
             });
-
-        }
-
-        function limpiarCapas() {
-            capas.forEach(c => c.setMap(null));
-            capas = [];
         }
 
         function filtrarMapa() {
             const tipo = document.getElementById('filtroTipo').value;
-            const riesgo = document.getElementById('filtroRiesgo').value;
-            const tipoSeguridad = document.getElementById('filtroTipoSeguridad').value;
-            const estado = document.getElementById('filtroEstado').value;
+            let filtroEspecifico = 'todos';
+
+            if (tipo === 'riesgo') {
+                filtroEspecifico = document.getElementById('filtroRiesgo').value;
+            } else if (tipo === 'segura') {
+                filtroEspecifico = document.getElementById('filtroTipoSeguridad').value;
+            }
 
             limpiarCapas();
 
             if (tipo === 'riesgo' || tipo === 'todos') {
                 zonasRiesgo.forEach(z => {
-                    if (
-                        (riesgo === 'todos' || z.nivel_riesgo === riesgo) &&
-                        (estado === 'todos' || (estado === 'activo' && z.activo) || (estado === 'inactivo' && !z.activo))
-                    ) {
+                    if (filtroEspecifico === 'todos' || z.nivel_riesgo === filtroEspecifico) {
                         const coords = JSON.parse(z.coordenadas);
                         const poligono = new google.maps.Polygon({
                             paths: coords,
@@ -134,10 +142,7 @@
 
             if (tipo === 'segura' || tipo === 'todos') {
                 zonasSeguras.forEach(z => {
-                    if (
-                        (tipoSeguridad === 'todos' || z.tipo_seguridad === tipoSeguridad) &&
-                        (estado === 'todos' || (estado === 'activo' && z.activo) || (estado === 'inactivo' && !z.activo))
-                    ) {
+                    if (filtroEspecifico === 'todos' || z.tipo_seguridad === filtroEspecifico) {
                         const circ = new google.maps.Circle({
                             center: { lat: parseFloat(z.latitud), lng: parseFloat(z.longitud) },
                             radius: parseFloat(z.radio),
@@ -153,19 +158,21 @@
 
             if (tipo === 'punto' || tipo === 'todos') {
                 puntosEncuentro.forEach(p => {
-                    if (
-                        estado === 'todos' || (estado === 'activo' && p.activo) || (estado === 'inactivo' && !p.activo)
-                    ) {
-                        const marcador = new google.maps.Marker({
-                            position: { lat: parseFloat(p.latitud), lng: parseFloat(p.longitud) },
-                            map: mapa,
-                            title: p.nombre
-                        });
-                        capas.push(marcador);
-                    }
+                    // Aquí no se filtra, se muestra todo directamente
+                    const marcador = new google.maps.Marker({
+                        position: { lat: parseFloat(p.latitud), lng: parseFloat(p.longitud) },
+                        map: mapa,
+                        title: p.nombre,
+                        icon: {
+                            url: '/img/encuentro.png',
+                            scaledSize: new google.maps.Size(32, 32)
+                        }
+                    });
+                    capas.push(marcador);
                 });
             }
         }
+
 
         window.onload = initMap;
     </script>

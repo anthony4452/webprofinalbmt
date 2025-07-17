@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\PuntoEncuentro;
+use App\Models\Puntos;
+use App\Models\ZonaRiesgo;
+use App\Models\ZonaSeg;
 
 class MapaController extends Controller
 {
@@ -13,11 +15,13 @@ class MapaController extends Controller
      */
     public function index(Request $request)
     {
-
-        $puntosEncuentro = PuntoEncuentro::where('estado', true)->get();
+        $puntosEncuentro = Puntos::where('activo', true)->get();
+        $zonasRiesgo = ZonaRiesgo::where('activo', true)->get();  // corregido estado->activo
+        $zonasSeguras = ZonaSeg::where('activo', true)->get();
 
         return view('mapa.general', compact('zonasRiesgo', 'zonasSeguras', 'puntosEncuentro'));
     }
+
 
 
     /**

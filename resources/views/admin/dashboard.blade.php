@@ -14,6 +14,12 @@
 
         <hr class="my-4">
 
+        <a href="{{ route('zonasseguras.index') }}" class="btn btn-primary">
+            Gestionar Zonas Seguras
+        </a>
+
+        <hr class="my-4">
+
         <a href="{{ route('puntos.index') }}" class="btn btn-primary">
             Gestionar Puntos de Encuentro Comunitarios
         </a>

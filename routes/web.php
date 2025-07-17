@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ZonaRiesgoController;
+use App\Http\Controllers\PuntosController;
 
 // Registrar middleware alias directamente para que Laravel los reconozca
 Route::aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
     Route::resource('zonasriesgo', ZonaRiesgoController::class);
+    Route::resource('puntos', PuntosController::class);
 });
 
 // Rutas para usuarios comunes con middleware user

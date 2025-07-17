@@ -11,6 +11,12 @@
         <a href="{{ route('zonasriesgo.index') }}" class="btn btn-primary">
             Gestionar Zonas de Riesgo
         </a>
+
+        <hr class="my-4">
+
+        <a href="{{ route('puntos.index') }}" class="btn btn-primary">
+            Gestionar Puntos de Encuentro Comunitarios
+        </a>
     </div>
 </x-app-layout>
 

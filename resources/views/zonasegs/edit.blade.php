@@ -4,6 +4,7 @@
             {{ isset($zonaseg) ? 'Editar Zona Segura' : 'Nueva Zona Segura' }}
         </h2>
     </x-slot>
+
     <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
         @if($errors->any())
             <div class="mb-4 p-3 bg-red-100 text-red-800 border border-red-300 rounded">
@@ -28,7 +29,12 @@
 
             <div class="mb-4">
                 <label class="font-semibold">Tipo de Seguridad *</label>
-                <input type="text" name="tipo_seguridad" class="form-input w-full" value="{{ old('tipo_seguridad', $zonaseg->tipo_seguridad ?? '') }}" required>
+                <select name="tipo_seguridad" class="form-select w-full" required>
+                    <option value="">-- Seleccione --</option>
+                    <option value="alarma" {{ old('tipo_seguridad', $zonasegzonaseg->tipo_seguridad ?? '') == 'alarma' ? 'selected' : '' }}>Alarma</option>
+                    <option value="vigilancia" {{ old('tipo_seguridad', $zonaseg->tipo_seguridad ?? '') == 'vigilancia' ? 'selected' : '' }}>Vigilancia</option>
+                    <option value="barreras" {{ old('tipo_seguridad', $zonaseg->tipo_seguridad ?? '') == 'barreras' ? 'selected' : '' }}>Barreras</option>
+                </select>
             </div>
 
             <div class="mb-4">

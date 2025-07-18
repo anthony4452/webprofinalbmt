@@ -24,9 +24,9 @@
             <!-- Filtro tipo seguridad (solo para Zonas Seguras) -->
             <select id="filtroTipoSeguridad" class="form-select" style="display:none;">
                 <option value="todos">Todos los tipos</option>
-                <option value="tipo1">Alarma</option>
-                <option value="tipo2">Vigilancia</option>
-                <option value="tipo3">Barreras</option>
+                <option value="alarma">Alarma</option>
+                <option value="vigilancia">Vigilancia</option>
+                <option value="barreras">Barreras</option>
             </select>
 
 

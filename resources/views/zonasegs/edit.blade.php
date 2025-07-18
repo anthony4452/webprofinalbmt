@@ -4,7 +4,6 @@
             {{ isset($zonaseg) ? 'Editar Zona Segura' : 'Nueva Zona Segura' }}
         </h2>
     </x-slot>
-
     <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
         @if($errors->any())
             <div class="mb-4 p-3 bg-red-100 text-red-800 border border-red-300 rounded">

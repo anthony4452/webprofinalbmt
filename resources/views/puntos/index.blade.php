@@ -1,73 +1,155 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800">Puntos de Encuentro Comunitarios</h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="p-6 bg-white rounded-lg shadow-md">
-        @if(session('success'))
-            <div class="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('puntos.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-                + Nuevo Punto de Encuentro
-            </a>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="min-w-full table-auto border border-gray-300 rounded">
-                <thead class="bg-black text-white">
-                    <tr>
-                        <th class="px-4 py-2 text-left">Nombre</th>
-                        <th class="px-4 py-2 text-left">Capacidad</th>
-                        <th class="px-4 py-2 text-left">Responsable</th>
-                        <th class="px-4 py-2 text-left">Ubicación</th>
-                        <th class="px-4 py-2 text-left">Estado</th>
-                        <th class="px-4 py-2 text-left">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($puntos as $punto)
-                        <tr class="border-b hover:bg-gray-100">
-                            <td class="px-4 py-2">{{ $punto->nombre }}</td>
-                            <td class="px-4 py-2">{{ $punto->capacidad }}</td>
-                            <td class="px-4 py-2">{{ $punto->responsable }}</td>
-                            <td class="px-4 py-2">
-                                Lat: {{ $punto->latitud }}<br>
-                                Long: {{ $punto->longitud }}
-                            </td>
-                            <td class="px-4 py-2">
-                                @if($punto->activo)
-                                    <span class="px-2 py-1 bg-green-200 text-green-800 rounded-full text-sm">Activo</span>
-                                @else
-                                    <span class="px-2 py-1 bg-red-200 text-red-800 rounded-full text-sm">Inactivo</span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-2">
-                                <a href="{{ route('puntos.edit', $punto->id) }}"
-                                   class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 shadow">
-                                    Editar
-                                </a>
-
-                                <form action="{{ route('puntos.destroy', $punto->id) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Eliminar este punto?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded shadow">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-gray-600">No hay puntos registrados.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+@section('contenido')
+<div class="container py-4" style="min-height: 80vh;">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="text-light d-flex align-items-center gap-2">
+            <i class="fas fa-map-marker-alt fa-2x text-primary"></i> Puntos de Encuentro Comunitarios
+        </h2>
+        <a href="{{ route('puntos.create') }}" class="btn btn-success shadow-sm">
+            <i class="fas fa-plus-circle me-1"></i> Nuevo Punto de Encuentro
+        </a>
     </div>
-</x-app-layout>
+
+    <div class="table-responsive shadow rounded">
+        <table id="puntosTable" class="table table-striped table-bordered align-middle" style="background: white;">
+            <thead class="table-header-blue">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Capacidad</th>
+                    <th>Responsable</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
+                    <th style="width: 160px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($puntos as $punto)
+                <tr>
+                    <td>{{ $punto->nombre }}</td>
+                    <td>{{ $punto->capacidad }}</td>
+                    <td>{{ $punto->responsable }}</td>
+                    <td>
+                        Lat: {{ $punto->latitud }}<br>
+                        Long: {{ $punto->longitud }}
+                    </td>
+                    <td>
+                        @if($punto->activo)
+                            <span class="badge bg-success text-white">Activo</span>
+                        @else
+                            <span class="badge bg-danger text-white">Inactivo</span>
+                        @endif
+                    </td>
+                    <td>
+                        <a href="{{ route('puntos.edit', $punto->id) }}" class="btn btn-warning btn-sm me-1" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ route('puntos.destroy', $punto->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar este punto?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection
+
+@push('styles')
+<style>
+    body {
+        background: linear-gradient(to right, #e0f7fa, #f1fcfc);
+        color: #000;
+    }
+
+    h2.text-light {
+        color: #000 !important;
+    }
+
+    .table-header-blue th {
+        background-color: #a8dadc;
+        color: #000;
+        border-color: #a8dadc;
+    }
+
+    .table {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        background-color: #fff !important;
+        border: 1px solid #a8dadc !important;
+        color: #000 !important;
+        border-radius: 4px;
+        padding: 4px 8px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: #000 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background-color: #a8dadc !important;
+        color: #000 !important;
+        border-radius: 4px;
+    }
+
+    .btn-success {
+        background-color: #007b83;
+        border-color: #007b83;
+    }
+
+    .btn-success:hover {
+        background-color: #005f62;
+        border-color: #005f62;
+    }
+
+    .btn-warning {
+        background-color: #facc15;
+        border-color: #facc15;
+        color: #000;
+    }
+
+    .btn-warning:hover {
+        background-color: #b45309;
+        border-color: #b45309;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #dc2626;
+        border-color: #dc2626;
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background-color: #991b1b;
+        border-color: #991b1b;
+        color: #fff;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        $('#puntosTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            responsive: true,
+        });
+    });
+</script>
+@endpush

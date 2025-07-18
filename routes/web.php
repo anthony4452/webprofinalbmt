@@ -51,6 +51,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 // Rutas para usuarios comunes con middleware user
 Route::middleware(['auth', 'verified', 'user'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
+
 });
 
 // Rutas para perfil de usuario

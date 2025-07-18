@@ -12,64 +12,63 @@ use App\Http\Controllers\ZonaSegController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ReporteController;
 
-// Registrar middleware alias directamente para que Laravel los reconozca
+// Alias para middlewares
 Route::aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
 Route::aliasMiddleware('user', \App\Http\Middleware\UserMiddleware::class);
 
-// Ruta raíz que redirige al login
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Ruta raíz
+Route::get('/', fn () => redirect()->route('login'));
 
-// Ruta dashboard que redirige según rol
+// Dashboard general
 Route::get('/dashboard', function () {
     $user = Auth::user();
-
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
-
-    return redirect()->route('user.dashboard');
+    return $user->role === 'admin'
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('user.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rutas para administradores con middleware admin
+// ==============================
+// RUTAS PARA ADMINISTRADORES
+// ==============================
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
+    // Mantener rutas sin prefijo para que las vistas antiguas funcionen sin cambiar nada
     Route::resource('zonasriesgo', ZonaRiesgoController::class);
     Route::resource('puntos', PuntosController::class);
-    Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::resource('zonasegs', ZonaSegController::class);
-
-
-
-
     
-
-
-
+    // Esta sí puede mantener el prefijo
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('users', UserManagementController::class);
+    });
 });
 
-// Rutas para usuarios comunes con middleware user
-Route::middleware(['auth', 'verified', 'user'])->group(function () {
-    Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
-
-
-
+// ==============================
+// RUTAS PARA USUARIOS
+// ==============================
+Route::middleware(['auth', 'verified', 'user'])->prefix('user')->name('user.')->group(function () {
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 });
 
-// Rutas que son accesibles por ambos roles (admin y user)
+// ==============================
+// RUTAS COMPARTIDAS
+// ==============================
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
 });
 
-// Rutas para perfil de usuario
+// ==============================
+// PERFIL
+// ==============================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rutas de autenticación generadas por Breeze (u otro paquete)
-require __DIR__.'/auth.php';
+// ==============================
+// AUTENTICACIÓN
+// ==============================
+require _DIR_.'/auth.php';

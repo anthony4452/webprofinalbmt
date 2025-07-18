@@ -31,7 +31,7 @@
                 <label class="font-semibold">Tipo de Seguridad *</label>
                 <select name="tipo_seguridad" class="form-select w-full" required>
                     <option value="">-- Seleccione --</option>
-                    <option value="alarma" {{ old('tipo_seguridad', $zonasegzonaseg->tipo_seguridad ?? '') == 'alarma' ? 'selected' : '' }}>Alarma</option>
+                    <option value="alarma" {{ old('tipo_seguridad', $zonaseg->tipo_seguridad ?? '') == 'alarma' ? 'selected' : '' }}>Alarma</option>
                     <option value="vigilancia" {{ old('tipo_seguridad', $zonaseg->tipo_seguridad ?? '') == 'vigilancia' ? 'selected' : '' }}>Vigilancia</option>
                     <option value="barreras" {{ old('tipo_seguridad', $zonaseg->tipo_seguridad ?? '') == 'barreras' ? 'selected' : '' }}>Barreras</option>
                 </select>

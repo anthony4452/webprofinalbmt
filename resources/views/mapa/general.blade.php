@@ -76,15 +76,30 @@
 
             zonasRiesgo.forEach(z => {
                 const coords = JSON.parse(z.coordenadas);
+
+                let color = "#999";
+                switch (z.nivel_riesgo) {
+                    case 'bajo':
+                        color = "#4CAF50"; // verde
+                        break;
+                    case 'medio':
+                        color = "#FFC107"; // naranja
+                        break;
+                    case 'alto':
+                        color = "#F44336"; // rojo
+                        break;
+                }
+
                 const poligono = new google.maps.Polygon({
                     paths: coords,
-                    strokeColor: "#FF0000",
-                    fillColor: "#FF9999",
+                    strokeColor: color,
+                    fillColor: color,
                     fillOpacity: 0.5,
                     map: mapa
                 });
                 capas.push(poligono);
             });
+
 
             zonasSeguras.forEach(z => {
                 const circ = new google.maps.Circle({
@@ -128,16 +143,31 @@
                 zonasRiesgo.forEach(z => {
                     if (filtroEspecifico === 'todos' || z.nivel_riesgo === filtroEspecifico) {
                         const coords = JSON.parse(z.coordenadas);
+
+                        let color = "#999";
+                        switch (z.nivel_riesgo) {
+                            case 'bajo':
+                                color = "#4CAF50"; // verde
+                                break;
+                            case 'medio':
+                                color = "#FFC107"; // naranja
+                                break;
+                            case 'alto':
+                                color = "#F44336"; // rojo
+                                break;
+                        }
+
                         const poligono = new google.maps.Polygon({
                             paths: coords,
-                            strokeColor: "#FF0000",
-                            fillColor: "#FF9999",
+                            strokeColor: color,
+                            fillColor: color,
                             fillOpacity: 0.5,
                             map: mapa
                         });
                         capas.push(poligono);
                     }
                 });
+
             }
 
             if (tipo === 'segura' || tipo === 'todos') {

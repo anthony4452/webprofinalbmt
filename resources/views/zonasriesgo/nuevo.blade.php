@@ -133,19 +133,44 @@
             actualizarCoordenadas();
         }
 
+
         function dibujarPoligono() {
             const pathCoords = marcadores.map(m => m.getPosition());
+
+            // Obtener el nivel de riesgo seleccionado
+            const nivelRiesgo = document.querySelector('select[name="nivel_riesgo"]').value;
+
+            // Determinar color según nivel
+            let color = "#999";
+            switch (nivelRiesgo) {
+                case 'bajo':
+                    color = "#4CAF50"; // verde
+                    break;
+                case 'medio':
+                    color = "#FFC107"; // naranja
+                    break;
+                case 'alto':
+                    color = "#F44336"; // rojo
+                    break;
+            }
+
+            // Eliminar polígono anterior
+            if (poligono) {
+                poligono.setMap(null);
+            }
+
+            // Crear nuevo polígono con color adecuado
             poligono = new google.maps.Polygon({
                 paths: pathCoords,
-                strokeColor: "#FF0000",
+                strokeColor: color,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: "#00FF00",
+                fillColor: color,
                 fillOpacity: 0.35,
+                map: mapa,
             });
-
-            poligono.setMap(mapa);
         }
+
 
         function actualizarCoordenadas() {
             const coords = marcadores.map(marcador => {

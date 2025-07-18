@@ -1,68 +1,126 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800">Zonas de Riesgo</h2>
-    </x-slot>
+cambiale el color al color que estamos usadno 
+@extends('layouts.app')
 
-    <div class="p-6 bg-white rounded-lg shadow-md">
-        @if(session('success'))
-            <div class="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('zonasriesgo.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-                + Nueva Zona de Riesgo
-            </a>
-        </div>
-
-        <div class="overflow-x-auto">
-            <table class="min-w-full table-auto border border-gray-300 rounded">
-                <thead class="bg-black text-white">
-                    <tr>
-                        <th class="px-4 py-2 text-left">Nombre</th>
-                        <th class="px-4 py-2 text-left">Descripción</th>
-                        <th class="px-4 py-2 text-left">Nivel de Riesgo</th>
-                        <th class="px-4 py-2 text-left">Estado</th>
-                        <th class="px-4 py-2 text-left">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($zonas as $zona)
-                        <tr class="border-b hover:bg-gray-100">
-                            <td class="px-4 py-2">{{ $zona->nombre }}</td>
-                            <td class="px-4 py-2">{{ Str::limit($zona->descripcion, 50) }}</td>
-                            <td class="px-4 py-2 capitalize">{{ $zona->nivel_riesgo }}</td>
-                            <td class="px-4 py-2">
-                                @if($zona->activo)
-                                    <span class="px-2 py-1 bg-green-200 text-green-800 rounded-full text-sm">Activo</span>
-                                @else
-                                    <span class="px-2 py-1 bg-red-200 text-red-800 rounded-full text-sm">Inactivo</span>
-                                @endif
-                            </td>
-                            <td class="px-4 py-2">
-                                <a href="{{ route('zonasriesgo.edit', $zona) }}"
-                                   class="inline-block bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded mr-2 shadow">
-                                    Editar
-                                </a>
-
-                                <form action="{{ route('zonasriesgo.destroy', $zona) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Eliminar esta zona?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded shadow">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-4 text-gray-600">No hay zonas de riesgo registradas.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+@section('contenido')
+<div class="container py-4" style="min-height: 80vh;">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="text-light d-flex align-items-center gap-2">
+            <i class="fas fa-exclamation-triangle fa-2x text-warning"></i> Zonas de Riesgo
+        </h2>
+        <a href="{{ route('zonasriesgo.create') }}" class="btn btn-success shadow-sm">
+            <i class="fas fa-plus-circle me-1"></i> Nueva Zona de Riesgo
+        </a>
     </div>
-</x-app-layout>
+
+    <div class="table-responsive shadow rounded">
+        <table id="zonasTable" class="table table-striped table-bordered align-middle" style="background: white;">
+            <thead class="table-header-blue">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nivel</th>
+                    <th>Descripción</th>
+                    <th style="width: 160px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($zonas as $zona)
+                <tr>
+                    <td>{{ $zona->nombre }}</td>
+                    <td>{{ ucfirst($zona->nivel_riesgo) }}</td>
+                    <td>{{ $zona->descripcion }}</td>
+                    <td>
+                        <a href="{{ route('zonasriesgo.edit', $zona->id) }}" class="btn btn-warning btn-sm me-1" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ route('zonasriesgo.destroy', $zona->id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar esta zona?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection
+
+@push('styles')
+@push('styles')
+<style>
+    body {
+        background: linear-gradient(to right, #e0f7fa, #f1fcfc); /* fondo celeste pastel */
+        color: #000; /* texto negro */
+    }
+
+    h2.text-light {
+        color: #000 !important;
+    }
+
+    .table-header-blue th {
+        background-color: #a8dadc; /* celeste pastel */
+        color: #000; /* texto negro */
+        border-color: #a8dadc;
+    }
+
+    .table {
+        background-color: #ffffff;
+        color: #000;
+    }
+
+    /* Ajustes DataTables para inputs y selects */
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        background-color: #ffffff !important;
+        border: 1px solid #a8dadc !important;
+        color: #000 !important;
+        border-radius: 4px;
+        padding: 4px 8px;
+    }
+
+    /* Paginación */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        color: #000 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background-color: #a8dadc !important;
+        color: #000 !important;
+        border-radius: 4px;
+    }
+
+    /* Botones de acción */
+    .btn-success {
+        background-color: #007b83;
+        border-color: #007b83;
+    }
+
+    .btn-success:hover {
+        background-color: #005f62;
+        border-color: #005f62;
+    }
+
+</style>
+@endpush
+
+@endpush
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        $('#zonasTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            responsive: true,
+        });
+    });
+</script>
+@endpush

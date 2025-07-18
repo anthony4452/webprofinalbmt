@@ -1,4 +1,3 @@
-cambiale el color al color que estamos usadno 
 @extends('layouts.app')
 
 @section('contenido')

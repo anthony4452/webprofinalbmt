@@ -38,6 +38,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('puntos', PuntosController::class);
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::resource('zonasegs', ZonaSegController::class);
+    Route::resource('/admin/users', UserController::class);
+
 
 
     

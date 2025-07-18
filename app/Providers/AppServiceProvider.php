@@ -6,13 +6,19 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    protected $routeMiddleware = [
-    // otros middlewares existentes...
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
 
-    'admin' => \App\Http\Middleware\AdminMiddleware::class,
-    'user' => \App\Http\Middleware\UserMiddleware::class,
-];
-
-
-
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
 }

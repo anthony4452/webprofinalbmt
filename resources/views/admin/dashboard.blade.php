@@ -122,13 +122,17 @@
             </div>
         </a>
 
-        <a href="{{ route('reporte.zonas') }}" class="text-decoration-none">
-            <div class="dashboard-box bg-warning">
-                <i class="fas fa-file"></i>
-                <h5>Reportes</h5>
-                <p>Realizar Reportes</p>
-            </div>
-        </a>
+        <form method="POST" action="{{ route('reportes.generar') }}">
+            @csrf
+            <button type="submit" class="btn btn-warning text-decoration-none">
+                <div class="dashboard-box bg-warning">
+                    <i class="fas fa-file"></i>
+                    <h5>Reportes</h5>
+                    <p>Realizar Reportes</p>
+                </div>
+            </button>
+        </form>
+
 
 
         <a href="{{ route('admin.users.index') }}" class="text-decoration-none">

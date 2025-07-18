@@ -50,8 +50,11 @@ Route::middleware(['auth', 'verified', 'user'])->prefix('user')->name('user.')->
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
-    Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
+    Route::get('/mapageneral', [ReporteController::class, 'mapaGeneral'])->name('reportes.mapa-general');
+
+    Route::post('/generar', [ReporteController::class, 'generarReporte'])->name('reportes.generar');
 });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

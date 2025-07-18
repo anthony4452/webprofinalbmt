@@ -2,89 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Models\ZonaSeg;
 use App\Models\ZonaRiesgo;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Auth;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\Http;
+use App\Models\Puntos;
+use PDF;
+use QrCode;
 
 class ReporteController extends Controller
 {
-    public function exportarZonasPDF()
+    public function mapaGeneral()
     {
-        $zonas = ZonaRiesgo::all();
-        $usuario = Auth::user();
+        $zonasSeguras = ZonaSeg::where('activo', true)->get();
+        $zonasRiesgo = ZonaRiesgo::where('activo', true)->get();
+        $puntosEncuentro = Puntos::where('activo', true)->get();
 
-        $googleApiKey = env('GOOGLE_MAPS_API_KEY');
-        $baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
-        $size = "600x400";
-        $zoom = 14;
+        return view('reportes.mapa-general', compact('zonasSeguras', 'zonasRiesgo', 'puntosEncuentro'));
+    }
 
-        $allCoords = [];
-        foreach ($zonas as $zona) {
-            $coords = json_decode($zona->coordenadas, true);
-            if ($coords) {
-                foreach ($coords as $p) {
-                    $allCoords[] = $p;
-                }
-            }
-        }
+    public function generarReporte(Request $request)
+    {
+        $imagenMapa = $request->input('imagenMapa'); // base64 desde html2canvas
+        $urlMapa = route('reportes.mapa-general');
 
-        $countCoords = count($allCoords);
-        if ($countCoords > 0) {
-            $centerLat = array_sum(array_column($allCoords, 'lat')) / $countCoords;
-            $centerLng = array_sum(array_column($allCoords, 'lng')) / $countCoords;
-        } else {
-            $centerLat = -0.93748;
-            $centerLng = -78.61613;
-        }
+        $zonasSeguras = ZonaSeg::where('activo', true)->get();
+        $zonasRiesgo = ZonaRiesgo::where('activo', true)->get();
+        $puntosEncuentro = Puntos::where('activo', true)->get();
 
-        $center = "{$centerLat},{$centerLng}";
+        $qrSvg = QrCode::format('svg')->size(120)->margin(1)->generate($urlMapa);
+        $qrBase64 = 'data:image/svg+xml;base64,' . base64_encode($qrSvg);
 
-        $paths = [];
-        foreach ($zonas as $zona) {
-            $coords = json_decode($zona->coordenadas, true);
-            if (!$coords) continue;
+        $data = compact('imagenMapa', 'qrBase64', 'zonasSeguras', 'zonasRiesgo', 'puntosEncuentro');
 
-            $pathCoords = [];
-            foreach ($coords as $punto) {
-                $pathCoords[] = "{$punto['lat']},{$punto['lng']}";
-            }
-            $pathCoords[] = "{$coords[0]['lat']},{$coords[0]['lng']}";
+        $pdf = PDF::loadView('reportes.reporte-pdf', $data)->setPaper('A4', 'portrait');
 
-            switch ($zona->nivel_riesgo) {
-                case 'bajo': $color = '0x4CAF5080'; break;
-                case 'medio': $color = '0xFFC10780'; break;
-                case 'alto': $color = '0xF4433680'; break;
-                default: $color = '0x99999980';
-            }
-
-            $path = "color:{$color}|weight:2|fillcolor:{$color}|" . implode('|', $pathCoords);
-            $paths[] = "path=" . urlencode($path);
-        }
-
-        $pathsQuery = implode('&', $paths);
-        $mapUrl = "{$baseUrl}?center={$center}&zoom={$zoom}&size={$size}&{$pathsQuery}&key={$googleApiKey}";
-
-        $mapUrl = html_entity_decode($mapUrl);
-        $response = Http::get($mapUrl);
-
-        if ($response->ok()) {
-            $mapContent = $response->body();
-            $mapBase64 = 'data:image/png;base64,' . base64_encode($mapContent);
-        } else {
-            $mapBase64 = null;
-        }
-
-        $urlConsulta = route('mapa.general');
-
-        $pdf = Pdf::loadView('reportes.zonas_pdf', [
-            'zonas' => $zonas,
-            'usuario' => $usuario,
-            'url' => $urlConsulta,
-            'mapImageBase64' => $mapBase64
-        ]);
-
-        return $pdf->download('reporte_zonas.pdf');
+        return $pdf->download('reporte_mapa_' . now()->format('Ymd_His') . '.pdf');
     }
 }

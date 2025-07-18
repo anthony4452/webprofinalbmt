@@ -10,9 +10,10 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        $usuarios = User::all(); // Muestra todos, sin filtrar por rol
-        return view('admin.users.index', compact('usuarios'));
+        $users = User::all(); // cambia el nombre a $users
+        return view('admin.users.index', compact('users'));
     }
+    
 
     public function create()
     {

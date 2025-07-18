@@ -3,33 +3,10 @@ services:
     name: laravel-bmt
     env: php
     plan: free
-    repo: https://gitlab.com/ilyanthoo-group/webprofinalbmt
-    branch: main
     buildCommand: >
       composer install --optimize-autoloader --no-dev &&
       php artisan config:cache &&
-      php artisan route:cache &&
-      php artisan view:cache &&
       php artisan migrate --force
     startCommand: php artisan serve --host=0.0.0.0 --port=10000
-    envVars:
-      - key: APP_ENV
-        value: production
-      - key: APP_DEBUG
-        value: false
-      - key: APP_KEY
-        value: base64:mtK08wNjJaXBfAMAdXhujjIn8Arfomxo6eASBB/zZi4=
-      - key: APP_URL
-        value: https://webprofinalbmt.onrender.com
-      - key: DB_CONNECTION
-        value: mysql
-      - key: DB_HOST
-        value: tramway.proxy.rlwy.net
-      - key: DB_PORT
-        value: 23921
-      - key: DB_DATABASE
-        value: railway
-      - key: DB_USERNAME
-        value: root
-      - key: DB_PASSWORD
-        value: eJluAajMBHJeZnqdJsIMPNRqHANqsgmu
+    repo: https://gitlab.com/ilyanthoo-group/webprofinalbmt
+    branch: main

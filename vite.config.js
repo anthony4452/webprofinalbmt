@@ -8,4 +8,11 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        manifest: true,
+        outDir: 'public/build',
+        rollupOptions: {
+            // cualquier configuración extra si tienes
+        },
+    },
 });

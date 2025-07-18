@@ -17,6 +17,7 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBF-pqS3WBYs8eap_ykcP7BtlNX2kU2kvU&libraries=places&callback=initMap">
         </script>
         <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

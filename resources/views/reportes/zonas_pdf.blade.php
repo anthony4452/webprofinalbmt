@@ -27,12 +27,11 @@
 
     <div class="mapa">
         <h3>Mapa General de Zonas</h3>
-        @if($mapImageBase64)
+        @if ($mapImageBase64)
             <img src="{{ $mapImageBase64 }}" alt="Mapa con zonas" style="width:100%; max-width:600px; border:1px solid #ccc;">
         @else
             <p>No se pudo cargar el mapa.</p>
         @endif
-
     </div>
 
     <div>

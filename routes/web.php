@@ -40,8 +40,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('puntos', PuntosController::class);
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::resource('zonasegs', ZonaSegController::class);
-    Route::resource('/admin/users', UserManagementController::class)->names('admin.users');
-    Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
+
 
 
 
@@ -54,10 +53,15 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 // Rutas para usuarios comunes con middleware user
 Route::middleware(['auth', 'verified', 'user'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
+
+
+
+});
+
+// Rutas que son accesibles por ambos roles (admin y user)
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
-
-
 });
 
 // Rutas para perfil de usuario

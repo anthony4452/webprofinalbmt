@@ -5,6 +5,11 @@
 
     <div class="p-6">
         <p>Bienvenido Admin {{ auth()->user()->name }}</p>
+        <hr class="my-4">
+
+        <a href="{{ route('admin.users.index') }}" class="btn btn-primary">
+            Usuarios
+        </a>
 
         <hr class="my-4">
 
@@ -29,6 +34,8 @@
         <a href="{{ route('mapa.general') }}" class="btn btn-primary">
             Mapa General
         </a>
+
+        
     </div>
 </x-app-layout>
 

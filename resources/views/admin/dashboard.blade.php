@@ -122,6 +122,23 @@
             </div>
         </a>
 
+        <a href="{{ route('reporte.zonas') }}" class="text-decoration-none">
+            <div class="dashboard-box bg-warning">
+                <i class="fas fa-file"></i>
+                <h5>Reportes</h5>
+                <p>Realizar Reportes</p>
+            </div>
+        </a>
+
+
+        <a href="{{ route('admin.users.index') }}" class="text-decoration-none">
+            <div class="dashboard-box bg-success">
+                <i class="fas fa-user"></i>
+                <h5>Usuarios</h5>
+                <p>Gestión de Usuarios Regsitrados</p>
+            </div>
+        </a>
+
     </div>
 
     <!-- Mini mapa -->

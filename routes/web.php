@@ -27,9 +27,7 @@ Route::get('/dashboard', function () {
         : redirect()->route('user.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// ==============================
-// RUTAS PARA ADMINISTRADORES
-// ==============================
+
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
@@ -44,31 +42,22 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     });
 });
 
-// ==============================
-// RUTAS PARA USUARIOS
-// ==============================
+
 Route::middleware(['auth', 'verified', 'user'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 });
 
-// ==============================
-// RUTAS COMPARTIDAS
-// ==============================
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
 });
 
-// ==============================
-// PERFIL
-// ==============================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ==============================
-// AUTENTICACIÓN
-// ==============================
+
 require __DIR__.'/auth.php';

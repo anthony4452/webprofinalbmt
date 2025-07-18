@@ -11,7 +11,11 @@
     <a href="{{ route('mapa.general') }}" class="btn btn-primary">
             Mapa General
     </a>
-    
+    <hr class="my-4">
+        <a href="{{ route('reporte.zonas') }}" class="btn btn-primary">
+            Reportes
+    </a>
+
     </div>
 
 </x-app-layout>

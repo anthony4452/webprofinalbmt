@@ -10,6 +10,7 @@ use App\Http\Controllers\PuntosController;
 use App\Http\Controllers\MapaController;
 use App\Http\Controllers\ZonaSegController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\ReporteController;
 
 // Registrar middleware alias directamente para que Laravel los reconozca
 Route::aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
@@ -40,6 +41,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
     Route::resource('zonasegs', ZonaSegController::class);
     Route::resource('/admin/users', UserManagementController::class)->names('admin.users');
+    Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
+
 
 
     
@@ -52,6 +55,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 Route::middleware(['auth', 'verified', 'user'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
     Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
+    Route::get('/reporte/zonas', [ReporteController::class, 'exportarZonasPDF'])->name('reporte.zonas');
+
 
 });
 

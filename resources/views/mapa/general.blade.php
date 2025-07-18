@@ -83,7 +83,7 @@
                         color = "#4CAF50"; // verde
                         break;
                     case 'medio':
-                        color = "#FFC107"; // naranja
+                        color = "#FFC107"; // naranjagi
                         break;
                     case 'alto':
                         color = "#F44336"; // rojo

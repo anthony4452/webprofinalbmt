@@ -49,8 +49,8 @@ Route::middleware(['auth', 'verified', 'user'])->prefix('user')->name('user.')->
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/mapa-general', [MapaController::class, 'index'])->name('mapa.general');
-    Route::get('/mapageneral', [ReporteController::class, 'mapaGeneral'])->name('reportes.mapa-general');
+    Route::get('/mapa_general', [MapaController::class, 'index'])->name('mapa.general');
+    Route::get('/mapa-general', [ReporteController::class, 'mapaGeneral'])->name('reportes.mapa-general');
 
     Route::post('/generar', [ReporteController::class, 'generarReporte'])->name('reportes.generar');
 });
